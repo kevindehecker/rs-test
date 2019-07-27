@@ -1,31 +1,37 @@
+#include <iostream>
 #include "cam.h"
-#include "cam_threaded.h"
+#include "opencv2/highgui/highgui.hpp"
 
 using namespace cv;
 using namespace std;
 
-#if 0 // change to switch between threaded and non threaded
+unsigned char key = 0;
 Cam cam;
-#else
-Cam_Threaded cam;
-#endif
 
-int main( int argc, char **argv )
+void handle_key() {
+    if (key == 27) { // set by an external ctrl-c
+	return;
+    }
+    key = cv::waitKey(1);
+    key = key & 0xff;
+    if (key == 27) {  //esc
+	return; // don't clear key, just exit
+    }
+    key=0;
+}
+
+int main( int argc __attribute__((unused)), char **argv __attribute__((unused)))
 {
-
     cam.init();
 
-    unsigned char key = 0;
-    while (key != 27) {
-        cam.update();
-
-        std::cout << cam.frame_number << ": " << cam.frame_time << std::endl;
-        imshow("test", cam.frameL);
-        key = waitKey(1);
+    while (key != 27) // ESC
+    {
+	cam.update();
+	cv::imshow("Blah", cam.frameL);
+	handle_key();
     }
 
     cv::destroyAllWindows();
     cam.close();
-
     return 0;
 }

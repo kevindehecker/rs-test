@@ -1,6 +1,9 @@
 #ifndef CAM_H
 #define CAM_H
 
+#include <iostream>
+#include <fstream>
+#include <unistd.h>
 #include "opencv2/highgui/highgui.hpp"
 #include <librealsense2/rs.hpp>
 
@@ -12,14 +15,11 @@ public:
     void close();
     void update();
 
-    int frame_number;
-    float frame_time;
     cv::Mat frameL;
 
 private:
-
-    rs2::pipeline rs_cam;
-
+    rs2::device dev;
+    rs2::pipeline cam;
 };
 
 #endif // CAM_H
